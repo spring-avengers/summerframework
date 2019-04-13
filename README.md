@@ -20,7 +20,7 @@ SummerFramework是在Spring Cloud的基础上一些扩展
 
 # Compile
 
-1: 首先构建summerframework-build
+1: 构建summerframework-build
  
 https://github.com/ke-finance/summerframework-build
 
@@ -34,6 +34,15 @@ https://github.com/ke-finance/summerframework-build
 ```
 ./install-all.sh
 
+```
+
+3: 构建summerframework-release
+
+https://github.com/ke-finance/summerframework-release
+
+```
+ mvn clean install
+ 
 ```
 
 
