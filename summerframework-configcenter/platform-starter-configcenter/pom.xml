@@ -1,0 +1,20 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>com.bkjk.platform.summerframework</groupId>
+        <artifactId>platform-configcenter</artifactId>
+        <version>2.0.0.RELEASE</version>
+    </parent>
+    <artifactId>platform-starter-configcenter</artifactId>
+    <version>2.0.0.RELEASE</version>
+    <name>${project.artifactId}</name>
+    <packaging>jar</packaging>
+    <dependencies>
+        <dependency>
+            <groupId>com.bkjk.platform.summerframework</groupId>
+            <artifactId>platform-configcenter-core</artifactId>
+        </dependency>
+    </dependencies>
+</project>

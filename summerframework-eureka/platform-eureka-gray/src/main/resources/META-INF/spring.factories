@@ -1,0 +1,3 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.bkjk.platform.gray.GrayEndpointAutoConfiguration,\
+com.bkjk.platform.gray.GrayFilterAutoConfiguration

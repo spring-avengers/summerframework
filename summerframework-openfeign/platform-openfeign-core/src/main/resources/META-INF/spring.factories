@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationContextInitializer=com.bkjk.platform.openfeign.OpenFeignApplictionInitalizer
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.bkjk.platform.openfeign.OpenFeignAutoConfiguration

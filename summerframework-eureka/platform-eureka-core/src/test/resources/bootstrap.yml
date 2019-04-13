@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: eureka-starter-test
+    group: bkjk
+    version: 1.0.0

@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationContextInitializer=com.bkjk.platform.mybatis.DruidAndMybatisApplicationContextInitializer
+org.springframework.boot.SpringApplicationRunListener=com.bkjk.platform.mybatis.PlatformMybatisApplicationRunListener

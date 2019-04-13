@@ -1,0 +1,4 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.bkjk.platform.webapi.WebApiConfig
+org.springframework.boot.SpringApplicationRunListener=\
+  com.bkjk.platform.webapi.WebapiApplicationRunListener

@@ -1,0 +1,6 @@
+org.springframework.boot.SpringApplicationRunListener=com.bkjk.platform.eureka.EurekaConfigurationListener
+org.springframework.context.ApplicationContextInitializer=com.bkjk.platform.eureka.EurekaApplicationContextInitializer
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+com.bkjk.platform.eureka.EurekatAutoConfiguration,\
+com.bkjk.platform.eureka.EurekaMgmtEndpointAutoConfiguration,\
+com.bkjk.platform.ribbon.RibbonAutoConfiguration
