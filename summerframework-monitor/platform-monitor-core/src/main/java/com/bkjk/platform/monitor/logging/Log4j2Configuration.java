@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 
+import com.bkjk.platform.monitor.MonitorConfigSpringApplicationRunListener;
 import com.bkjk.platform.monitor.logging.appender.log4j.AdvancedKafkaAppender;
 import com.bkjk.platform.monitor.logging.appender.log4j.layout.CustomJsonLayout;
 
@@ -31,19 +32,21 @@ public class Log4j2Configuration extends LogConfiguration {
     private static final Logger logger = LoggerFactory.getLogger(Log4j2Configuration.class);
 
     private void createBizLogger() {
-        String appenderName = "AdvancedKafkaAppender";
-        LoggerContext loggerContext = (LoggerContext)LogManager.getContext(false);
-        Configuration configuration = loggerContext.getConfiguration();
-        AdvancedKafkaAppender kafkaAppender =
-            AdvancedKafkaAppender.createAppender(CustomJsonLayout.createDefaultLayout(), null, configuration,
-                appenderName, getKafkaTopic(), getBootstrapservers());
-        kafkaAppender.start();
-        AppenderRef ref = AppenderRef.createAppenderRef(appenderName, null, null);
-        AppenderRef[] refs = new AppenderRef[] {ref};
-        LoggerConfig loggerConfig =
-            LoggerConfig.createLogger(false, Level.INFO, "BizLogger", null, refs, null, configuration, null);
-        loggerConfig.addAppender(kafkaAppender, null, null);
-        configuration.addLogger("BizLogger", loggerConfig);
+        if (env.containsProperty(MonitorConfigSpringApplicationRunListener.LOG_KAFKA_BOOTSTRAPSERVERS)) {
+            String appenderName = "AdvancedKafkaAppender";
+            LoggerContext loggerContext = (LoggerContext)LogManager.getContext(false);
+            Configuration configuration = loggerContext.getConfiguration();
+            AdvancedKafkaAppender kafkaAppender =
+                AdvancedKafkaAppender.createAppender(CustomJsonLayout.createDefaultLayout(), null, configuration,
+                    appenderName, getKafkaTopic(), getBootstrapservers());
+            kafkaAppender.start();
+            AppenderRef ref = AppenderRef.createAppenderRef(appenderName, null, null);
+            AppenderRef[] refs = new AppenderRef[] {ref};
+            LoggerConfig loggerConfig =
+                LoggerConfig.createLogger(false, Level.INFO, "BizLogger", null, refs, null, configuration, null);
+            loggerConfig.addAppender(kafkaAppender, null, null);
+            configuration.addLogger("BizLogger", loggerConfig);
+        }
     }
 
     @SuppressWarnings("deprecation")

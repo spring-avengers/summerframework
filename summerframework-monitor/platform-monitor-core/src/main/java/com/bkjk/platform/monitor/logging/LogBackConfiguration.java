@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.util.ReflectionUtils;
 
+import com.bkjk.platform.monitor.MonitorConfigSpringApplicationRunListener;
 import com.bkjk.platform.monitor.logging.appender.logback.AdvancedKafkaAppender;
 import com.bkjk.platform.monitor.logging.appender.logback.layout.CustomJsonLayout;
 
@@ -28,19 +29,20 @@ public class LogBackConfiguration extends LogConfiguration {
         super(env);
     }
 
-    private Logger createBizLogger() {
-        LoggerContext content = (LoggerContext)LoggerFactory.getILoggerFactory();
-        AdvancedKafkaAppender kafkaAppender = new AdvancedKafkaAppender();
-        kafkaAppender.setLayout(new CustomJsonLayout());
-        kafkaAppender.setTopic(getKafkaTopic());
-        kafkaAppender.setBootstrapServers(getBootstrapservers());
-        kafkaAppender.setContext(content);
-        kafkaAppender.start();
-        Logger logger = (Logger)LoggerFactory.getLogger("BizLogger");
-        logger.addAppender(kafkaAppender);
-        logger.setLevel(Level.INFO);
-        logger.setAdditive(false);
-        return logger;
+    private void createBizLogger() {
+        if (env.containsProperty(MonitorConfigSpringApplicationRunListener.LOG_KAFKA_BOOTSTRAPSERVERS)) {
+            LoggerContext content = (LoggerContext)LoggerFactory.getILoggerFactory();
+            AdvancedKafkaAppender kafkaAppender = new AdvancedKafkaAppender();
+            kafkaAppender.setLayout(new CustomJsonLayout());
+            kafkaAppender.setTopic(getKafkaTopic());
+            kafkaAppender.setBootstrapServers(getBootstrapservers());
+            kafkaAppender.setContext(content);
+            kafkaAppender.start();
+            Logger logger = (Logger)LoggerFactory.getLogger("BizLogger");
+            logger.addAppender(kafkaAppender);
+            logger.setLevel(Level.INFO);
+            logger.setAdditive(false);
+        }
     }
 
     @Override

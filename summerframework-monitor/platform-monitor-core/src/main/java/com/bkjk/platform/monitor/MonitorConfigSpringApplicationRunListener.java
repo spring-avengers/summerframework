@@ -1,5 +1,7 @@
 package com.bkjk.platform.monitor;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.SpringApplicationRunListener;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -11,6 +13,9 @@ import org.springframework.core.env.ConfigurableEnvironment;
  */
 @Order(value = 2)
 public class MonitorConfigSpringApplicationRunListener implements SpringApplicationRunListener {
+
+    private static Logger LOGGER = LoggerFactory.getLogger(MonitorConfigSpringApplicationRunListener.class);
+
     public MonitorConfigSpringApplicationRunListener(SpringApplication application, String[] args) {
     }
 
@@ -40,8 +45,7 @@ public class MonitorConfigSpringApplicationRunListener implements SpringApplicat
             value = ENVIRONMENT.getProperty(key, defaultValue);
         }
         if (value == null) {
-            throw new IllegalArgumentException(
-                "not found " + key + " in Environment, please config " + key + "'s value");
+            LOGGER.warn("not found " + key + " in Environment, please config " + key + "'s value");
         }
         return value;
     }
