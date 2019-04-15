@@ -57,7 +57,7 @@ https://github.com/ke-finance/summerframework-release
 
 # License
 
-This software is free to use under the Apache License [Apache license](https://github.com/alibaba/DataX/blob/master/license.txt).
+This software is free to use under the Apache License [Apache license](https://raw.githubusercontent.com/ke-finance/summerframework/master/LICENSE).
 
 
 
