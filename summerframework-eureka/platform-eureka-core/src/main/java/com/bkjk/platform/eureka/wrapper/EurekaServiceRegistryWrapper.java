@@ -69,9 +69,6 @@ public class EurekaServiceRegistryWrapper extends EurekaServiceRegistry {
             registration.getMetadata().put(Constants.EUREKA_METADATA_GROUP, group);
             registration.getMetadata().put(Constants.EUREKA_METADATA_VERSION, version);
         }
-
-        // @See platform-starter-springfox need to custom swagger-ui
-        // Add by tao.yang 2018/09/18
         String springfoxEnable = this.getProperties(Constants.PROVIDER_SPRINGFOX_ENABLE);
         if ("true".equals(springfoxEnable)) {
             registration.getMetadata().put(Constants.EUREKA_METADATA_SPRINGFOX, springfoxEnable);

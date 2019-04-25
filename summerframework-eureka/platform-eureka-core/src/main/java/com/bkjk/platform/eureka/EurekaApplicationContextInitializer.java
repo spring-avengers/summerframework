@@ -2,6 +2,7 @@
 package com.bkjk.platform.eureka;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
 import org.springframework.beans.BeansException;
 import org.springframework.beans.factory.config.InstantiationAwareBeanPostProcessorAdapter;
@@ -24,22 +25,29 @@ public class EurekaApplicationContextInitializer
     public void initialize(ConfigurableApplicationContext applicationContext) {
         ConfigurableEnvironment environment = applicationContext.getEnvironment();
         applicationContext.getBeanFactory().addBeanPostProcessor(new InstantiationAwareBeanPostProcessorAdapter() {
+
             @Override
             public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
                 if (bean instanceof CloudEurekaClient) {
                     CloudEurekaClient eurekaClient = (CloudEurekaClient)bean;
-                    Field filedPublisher = ReflectionUtils.findField(CloudEurekaClient.class, "publisher",
-                        ApplicationEventPublisher.class);
-                    ReflectionUtils.makeAccessible(filedPublisher);
-                    ApplicationEventPublisher publisher =
-                        (ApplicationEventPublisher)ReflectionUtils.getField(filedPublisher, eurekaClient);
-                    return new EurekaClientWrapper(eurekaClient, environment, publisher);
+                    try {
+                        Field filedPublisher = ReflectionUtils.findField(CloudEurekaClient.class, "publisher",
+                            ApplicationEventPublisher.class);
+                        ReflectionUtils.makeAccessible(filedPublisher);
+                        ApplicationEventPublisher publisher =
+                            (ApplicationEventPublisher)ReflectionUtils.getField(filedPublisher, eurekaClient);
+                        return new EurekaClientWrapper(eurekaClient, environment, publisher);
+                    } finally {
+                        Method method = ReflectionUtils.findMethod(CloudEurekaClient.class, "cancelScheduledTasks");
+                        ReflectionUtils.makeAccessible(method);
+                        ReflectionUtils.invokeMethod(method, eurekaClient);
+                        eurekaClient = null;
+                    }
                 } else if (bean instanceof EurekaServiceRegistry) {
                     EurekaServiceRegistry eurekaServiceRegistry = (EurekaServiceRegistry)bean;
                     return new EurekaServiceRegistryWrapper(eurekaServiceRegistry, environment);
                 } else if (bean instanceof EurekaInstanceConfigBean) {
                     EurekaInstanceConfigBean instanceConfig = (EurekaInstanceConfigBean)bean;
-
                     instanceConfig.setPreferIpAddress(true);
                     return bean;
                 } else {

@@ -1,14 +1,8 @@
 package com.bkjk.platform.webapi;
 
-import com.bkjk.platform.webapi.filter.ApiFilterInterceptor;
-import com.bkjk.platform.webapi.filter.ApiResponseFilter;
-import com.bkjk.platform.webapi.misc.AutoRequestBodyProcessor;
-import com.bkjk.platform.webapi.result.ApiResultTransformer;
-import com.bkjk.platform.webapi.result.DefaultApiResultTransformer;
-import com.bkjk.platform.webapi.result.StringOrJsonHttpMessageConverter;
-import com.bkjk.platform.webapi.version.ApiVersionHandlerMapping;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.google.common.collect.Lists;
+import java.util.Iterator;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.web.servlet.WebMvcRegistrations;
@@ -26,8 +20,15 @@ import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import java.util.Iterator;
-import java.util.List;
+import com.bkjk.platform.webapi.filter.ApiFilterInterceptor;
+import com.bkjk.platform.webapi.filter.ApiResponseFilter;
+import com.bkjk.platform.webapi.misc.AutoRequestBodyProcessor;
+import com.bkjk.platform.webapi.result.ApiResultTransformer;
+import com.bkjk.platform.webapi.result.DefaultApiResultTransformer;
+import com.bkjk.platform.webapi.result.StringOrJsonHttpMessageConverter;
+import com.bkjk.platform.webapi.version.ApiVersionHandlerMapping;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.collect.Lists;
 
 @Configuration
 @ComponentScan(value = "com.bkjk.platform.webapi",
@@ -66,10 +67,10 @@ public class WebApiConfig implements WebMvcConfigurer, WebMvcRegistrations {
         }
         converters.removeAll(customeCovertList);
         StringOrJsonHttpMessageConverter converter;
-        if(objectMapper==null){
-            converter=new StringOrJsonHttpMessageConverter();
-        }else {
-            converter=new StringOrJsonHttpMessageConverter(objectMapper);
+        if (objectMapper == null) {
+            converter = new StringOrJsonHttpMessageConverter();
+        } else {
+            converter = new StringOrJsonHttpMessageConverter(objectMapper);
         }
         if (!customeCovertList.isEmpty()) {
             converters.addAll(0, customeCovertList);
