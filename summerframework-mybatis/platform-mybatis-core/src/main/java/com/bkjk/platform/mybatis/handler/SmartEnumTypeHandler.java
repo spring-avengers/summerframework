@@ -33,12 +33,11 @@ public class SmartEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> 
         this.fallback=new EnumOrdinalTypeHandler(type);
     }
 
-    public static String getValueMethodName ="getValue";
-    public static String fromValueMethodName ="fromValue";
+    public final static String GET_VALUE_METHOD_NAME ="getValue";
 
     @Override
     public void setNonNullParameter(PreparedStatement ps, int i, E parameter, JdbcType jdbcType) throws SQLException {
-        Method method = ReflectionUtils.findMethod(parameter.getClass(), getValueMethodName);
+        Method method = ReflectionUtils.findMethod(parameter.getClass(), GET_VALUE_METHOD_NAME);
         try {
             ps.setObject(i,method.invoke(parameter));
         } catch (Exception e) {
@@ -48,16 +47,8 @@ public class SmartEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> 
 
     @Override
     public E getNullableResult(ResultSet rs, String columnName) throws SQLException {
-        if(rs.wasNull()){
-            return null;
-        }
-        Object value = rs.getObject(columnName);
-        if(null==value){
-            return null;
-        }
-        Method method = ReflectionUtils.findMethod(type, fromValueMethodName,value.getClass());
         try {
-            return (E) method.invoke(type,rs.getObject(columnName));
+            return (E)getEnumOrNull(type,rs.getObject(columnName));
         } catch (Exception e) {
             return (E) fallback.getNullableResult(rs,columnName);
         }
@@ -65,16 +56,9 @@ public class SmartEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> 
 
     @Override
     public E getNullableResult(ResultSet rs, int columnIndex) throws SQLException {
-        if(rs.wasNull()){
-            return null;
-        }
         Object value = rs.getObject(columnIndex);
-        if(null==value){
-            return null;
-        }
-        Method method = ReflectionUtils.findMethod(type, fromValueMethodName,value.getClass());
         try {
-            return (E) method.invoke(type,value);
+            return (E)getEnumOrNull(type,value);
         } catch (Exception e) {
             return (E) fallback.getNullableResult(rs,columnIndex);
         }
@@ -82,18 +66,36 @@ public class SmartEnumTypeHandler<E extends Enum<E>> extends BaseTypeHandler<E> 
 
     @Override
     public E getNullableResult(CallableStatement cs, int columnIndex) throws SQLException {
-        if(cs.wasNull()){
-            return null;
-        }
         Object value = cs.getObject(columnIndex);
-        if(null==value){
-            return null;
-        }
-        Method method = ReflectionUtils.findMethod(type, fromValueMethodName,value.getClass());
         try {
-            return (E) method.invoke(type,value);
+            return (E) getEnumOrNull(type,value);
         } catch (Exception e) {
             return (E) fallback.getNullableResult(cs,columnIndex);
         }
     }
+
+    private static final <E> E getEnumOrNull(Class<E> type,Object value){
+        if(null==value){
+            return null;
+        }
+        Method method = null;
+        try {
+            method = type.getDeclaredMethod("values");
+            Object[] values= (Object[]) method.invoke(type);
+            Method valuesMethod = ReflectionUtils.findMethod(type, GET_VALUE_METHOD_NAME);
+            for (int i = 0; i < values.length; i++) {
+                Object code=valuesMethod.invoke(values[i]);
+                if(code.getClass().equals(value.getClass())){
+                    //仅当类型一致时，用equals做比较
+                    if(code!=null&&code.equals(value)){
+                        return (E) values[i];
+                    }
+                }
+            }
+            return null;
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e.getMessage(),e);
+        }
+    }
+
 }

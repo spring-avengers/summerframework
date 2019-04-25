@@ -6,15 +6,12 @@ import com.baomidou.mybatisplus.extension.toolkit.PackageHelper;
 import com.bkjk.platform.mybatis.handler.SmartEnumTypeHandler;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.type.TypeHandlerRegistry;
-import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.ApplicationContextAware;
 import org.springframework.context.ConfigurableApplicationContext;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.util.StringUtils;
 
-import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -27,20 +24,15 @@ import static org.springframework.util.StringUtils.tokenizeToStringArray;
  * @Author: shaoze.wang
  * @Create: 2019/4/9 15:50
  **/
-public class CustomizeSqlSessionFactory  implements ApplicationContextAware {
+public class CustomizeSqlSessionFactory {
 
     private  String typeEnumsPackage;
     private SqlSessionFactory sqlSessionFactory;
     private ApplicationContext applicationContext;
 
-    public CustomizeSqlSessionFactory(String typeEnumsPackage,SqlSessionFactory sqlSessionFactory) {
+    public CustomizeSqlSessionFactory(String typeEnumsPackage,SqlSessionFactory sqlSessionFactory,ApplicationContext applicationContext) {
         this.sqlSessionFactory = sqlSessionFactory;
         this.typeEnumsPackage=typeEnumsPackage;
-
-    }
-
-    @PostConstruct
-    public void init(){
         List<String> basePackage=new ArrayList<>();
         if(!StringUtils.isEmpty(this.typeEnumsPackage)){
             basePackage.addAll(Arrays.asList(this.typeEnumsPackage.split(",")));
@@ -94,8 +86,4 @@ public class CustomizeSqlSessionFactory  implements ApplicationContextAware {
         typeHandlerRegistry.register(enumClazz, SmartEnumTypeHandler.class);
     }
 
-    @Override
-    public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
-        this.applicationContext=applicationContext;
-    }
 }

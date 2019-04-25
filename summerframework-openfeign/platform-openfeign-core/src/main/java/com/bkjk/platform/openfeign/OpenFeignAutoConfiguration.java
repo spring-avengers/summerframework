@@ -1,13 +1,15 @@
 
 package com.bkjk.platform.openfeign;
 
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.annotation.PostConstruct;
-import javax.validation.Valid;
-
+import com.bkjk.platform.openfeign.decoder.ApiErrorDecoder;
+import com.bkjk.platform.openfeign.decoder.ApiResultDecoder;
+import com.bkjk.platform.openfeign.decoder.ApiResultHandler;
+import com.bkjk.platform.openfeign.decoder.SummerWrappedApiResultHandler;
+import com.bkjk.platform.webapi.result.ApiResultTransformer;
+import com.bkjk.platform.webapi.result.ApiResultWrapper;
+import feign.Feign;
+import feign.codec.Decoder;
+import feign.codec.ErrorDecoder;
 import org.springframework.beans.factory.ObjectFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
@@ -20,31 +22,27 @@ import org.springframework.cloud.openfeign.support.SpringDecoder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.MethodParameter;
+import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.core.annotation.SynthesizingMethodParameter;
 import org.springframework.core.convert.ConversionService;
 import org.springframework.format.support.DefaultFormattingConversionService;
 import org.springframework.format.support.FormattingConversionService;
 import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.CookieValue;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.method.annotation.RequestHeaderMethodArgumentResolver;
+import org.springframework.web.method.annotation.RequestParamMethodArgumentResolver;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.mvc.method.annotation.PathVariableMethodArgumentResolver;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter;
 import org.springframework.web.servlet.mvc.method.annotation.RequestResponseBodyMethodProcessor;
 import org.springframework.web.servlet.mvc.method.annotation.ServletCookieValueMethodArgumentResolver;
 
-import com.bkjk.platform.openfeign.decoder.ApiErrorDecoder;
-import com.bkjk.platform.openfeign.decoder.ApiResultDecoder;
-import com.bkjk.platform.openfeign.decoder.ApiResultHandler;
-import com.bkjk.platform.openfeign.decoder.SummerWrappedApiResultHandler;
-import com.bkjk.platform.webapi.result.ApiResultTransformer;
-import com.bkjk.platform.webapi.result.ApiResultWrapper;
-
-import feign.Feign;
-import feign.codec.Decoder;
-import feign.codec.ErrorDecoder;
+import javax.annotation.PostConstruct;
+import javax.validation.Valid;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.List;
 
 @Configuration
 @ConditionalOnClass(Feign.class)
@@ -56,7 +54,7 @@ public class OpenFeignAutoConfiguration {
                 try {
                     Method method =
                         itf.getMethod(parameter.getMethod().getName(), parameter.getMethod().getParameterTypes());
-                    MethodParameter itfParameter = new MethodParameter(method, parameter.getParameterIndex());
+                    MethodParameter itfParameter = new InterfaceMethodParameter(method, parameter.getParameterIndex());
                     if (itfParameter.hasParameterAnnotation(annotationType)) {
                         return itfParameter;
                     }
@@ -66,6 +64,44 @@ public class OpenFeignAutoConfiguration {
             }
         }
         return parameter;
+    }
+
+    private static class InterfaceMethodParameter extends SynthesizingMethodParameter {
+
+        private volatile Annotation[] parameterAnnotations;
+
+        private Method interfaceMethod;
+
+        public InterfaceMethodParameter(Method interfaceMethod, int parameterIndex) {
+            super(interfaceMethod, parameterIndex);
+            this.interfaceMethod = interfaceMethod;
+        }
+
+        @Override
+        public Annotation[] getParameterAnnotations() {
+            Annotation[][] annotationArray = this.interfaceMethod.getParameterAnnotations();
+            if (this.getParameterIndex() >= 0 && this.getParameterIndex() < annotationArray.length) {
+                this.parameterAnnotations = annotationArray[this.getParameterIndex()];
+                for (int i = 0; i < this.parameterAnnotations.length; i++) {
+                    this.parameterAnnotations[i] =
+                        AnnotationUtils.synthesizeAnnotation(this.parameterAnnotations[i], null);
+                }
+            } else {
+                this.parameterAnnotations = new Annotation[0];
+            }
+            return this.parameterAnnotations;
+        }
+
+        @Override
+        public boolean equals(Object other) {
+            return super.equals(other);
+        }
+
+        @Override
+        public int hashCode() {
+            return super.hashCode();
+        }
+
     }
 
     @Autowired
@@ -140,6 +176,18 @@ public class OpenFeignAutoConfiguration {
     @PostConstruct
     public void modifyArgumentResolvers() {
         List<HandlerMethodArgumentResolver> list = new ArrayList<>(adapter.getArgumentResolvers());
+
+        list.add(0, new RequestParamMethodArgumentResolver(true) {
+            @Override
+            protected NamedValueInfo createNamedValueInfo(MethodParameter parameter) {
+                return super.createNamedValueInfo(interfaceMethodParameter(parameter, RequestParam.class));
+            }
+
+            @Override
+            public boolean supportsParameter(MethodParameter parameter) {
+                return super.supportsParameter(interfaceMethodParameter(parameter, RequestParam.class));
+            }
+        });
 
         list.add(0, new PathVariableMethodArgumentResolver() {
             @Override
