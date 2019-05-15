@@ -16,6 +16,8 @@ SummerFramework是在Spring Cloud的基础上一些扩展
 
 * 对Web Api进行统一规范，规范化返回结果，异常，api版本
 
+* 封装锁，提供注解式加锁、自定义锁失败处理以及多种锁的实现
+
 
 
 
