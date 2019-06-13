@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>com.bkjk.platform.summerframework</groupId>
+		<artifactId>summerframework-build</artifactId>
+		<version>2.0.0.RELEASE</version>
+		<relativePath />
+	</parent>
+	<packaging>pom</packaging>
+	<artifactId>platform-jobcenter</artifactId>
+	<version>2.0.0.RELEASE</version>
+	<description>platform-jobcenter</description>
+	<properties>
+	</properties>
+	<modules>
+		<module>platform-jobcenter-dependencies</module>
+		<module>platform-jobcenter-core</module>
+		<module>platform-starter-jobcenter</module>
+	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.bkjk.platform.summerframework</groupId>
+				<artifactId>platform-jobcenter-dependencies</artifactId>
+				<version>${project.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

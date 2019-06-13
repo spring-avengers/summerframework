@@ -1,0 +1,2 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.bkjk.platform.jobcenter.JobCenterAutoConfiguration
+org.springframework.boot.SpringApplicationRunListener=com.bkjk.platform.jobcenter.discovery.JobCenterEurekaConfigurationListener

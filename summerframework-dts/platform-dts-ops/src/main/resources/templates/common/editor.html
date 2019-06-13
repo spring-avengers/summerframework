@@ -1,0 +1,23 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:fragment="editor-box">
+    <link th:href="@{/css/plugins/codemirror/codemirror.css}" rel="stylesheet">
+    <link th:href="@{/css/plugins/codemirror/ambiance.css}" rel="stylesheet">
+    <script th:src="@{/js/plugins/codemirror/codemirror.js}" type="text/javascript" defer="defer"></script>
+    <script th:src="@{/js/plugins/codemirror/autorefresh.js}" type="text/javascript" defer="defer"></script>
+    <script th:src="@{/js/plugins/codemirror/mode/javascript/javascript.js}" type="text/javascript" defer="defer"></script>
+    <script type="text/javascript">
+        var initEditor = function(id){
+            var editor=CodeMirror.fromTextArea(document.getElementById(id),{
+                lineNumbers:true,
+                matchBrackets:true,
+                styleActiveLine:true,
+                autoRefresh:true
+            });
+            return editor;
+        }
+    </script>
+</div>
+</body>
+</html>

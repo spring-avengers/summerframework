@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: ${DTS_MYSQL_JDBC_URL}
+    username: ${DTS_MYSQL_JDBC_USERNAME}
+    password: ${DTS_MYSQL_JDBC_PASSWORD}
+    driver-class-name: com.mysql.jdbc.Driver
+server:
+  port: 8080
+hazelcast:
+  version: 1.0.0
+dts:
+  lockTimeoutMillis: ${DTS_LOCKTIMEOUTMILLIS}
+  channelExpiredTimeoutMillis: ${DTS_CHANNELEXPIREDTIMEOUTMILLIS}
+  rpcInvokeTimeout: ${DTS_RPC_INVOKE_TIMEOUT}
+  retry:
+      enabled: ${DTS_RETRY_ENABLED}
+  headerRequest:
+    corePoolSizeCpuTimes: ${DTS_HEADERREQUEST_COREPOOLSIZECPUTIMES}
+    maximumPoolSizeCpuTimes: ${DTS_HEADERREQUEST_MAXIMUMPOOLSIZECPUTIMES}
+    headerRequestKeepaliveTime: ${DTS_HEADERREQUEST_HEADERREQUESTKEEPALIVETIME}

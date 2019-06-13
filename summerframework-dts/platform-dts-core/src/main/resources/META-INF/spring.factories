@@ -1,0 +1,2 @@
+org.springframework.context.ApplicationContextInitializer=com.bkjk.platfrom.dts.core.SpringContextHolder
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.bkjk.platfrom.dts.core.DtsAutoConfiguration

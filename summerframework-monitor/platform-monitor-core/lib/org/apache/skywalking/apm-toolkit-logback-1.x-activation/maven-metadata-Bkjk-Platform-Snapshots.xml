@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.apache.skywalking</groupId>
+  <artifactId>apm-toolkit-logback-1.x-activation</artifactId>
+  <versioning>
+    <versions>
+      <version>5.0.0-RC-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20180724073318</lastUpdated>
+  </versioning>
+</metadata>

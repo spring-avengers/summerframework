@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.util.ReflectionUtils;
 
+import java.lang.ref.WeakReference;
 import java.lang.reflect.Field;
 import java.util.*;
 import java.util.concurrent.*;
@@ -157,9 +158,9 @@ public class TestLock {
 
         Field field = ReflectionUtils.findField(JavaConcurrentLockFactory.class, "lockCache");
         field.setAccessible(true);
-        ConcurrentHashMap<String, Lock> cache = (ConcurrentHashMap<String, Lock>) field.get(javaConcurrentLockFactory);
+        ConcurrentHashMap<String, WeakReference<Lock>> cache = (ConcurrentHashMap<String, WeakReference<Lock>>) field.get(javaConcurrentLockFactory);
         if (cache.containsKey(key)) {
-            ReentrantLock lock = (ReentrantLock) cache.get(key);
+            ReentrantLock lock = (ReentrantLock) cache.get(key).get();
             Assert.assertTrue(!lock.isLocked());
             Assert.assertTrue(!lock.isFair());
         }
@@ -304,4 +305,49 @@ public class TestLock {
     }
 
 
+    @Test
+    public void testMutateBalance(){
+        testService.mutateBalance(TestService.ContractUpdateDTO.builder().id(1L).build());
+        log.info("locks {}", lockMonitor.getLockNames());
+        Assert.assertTrue(lockMonitor.getLockNames().contains("p.lock.mutateBalance.1"));
+    }
+
+    @Test
+    public void testReadWriteBalance(){
+        TestService.ContractUpdateDTO contract1 = TestService.ContractUpdateDTO.builder().id(1L).amt(1).build();
+        TestService.ContractUpdateDTO contract2 = TestService.ContractUpdateDTO.builder().id(2L).amt(2).build();
+        testService.updateBalance(contract1);
+        Assert.assertEquals(1,testService.getBalance(contract1.getId()));
+        testService.updateBalance(contract2);
+        Assert.assertEquals(2,testService.getBalance(contract2.getId()));
+    }
+
+    @Autowired
+    private LockOperation lockOperation;
+
+    @Test
+    public void testRefer() throws IllegalAccessException, InterruptedException {
+        Field field = ReflectionUtils.findField(JavaConcurrentLockFactory.class, "lockCache");
+        field.setAccessible(true);
+        ConcurrentHashMap<String, WeakReference<Lock>> cache = (ConcurrentHashMap<String, WeakReference<Lock>>) field.get(javaConcurrentLockFactory);
+        Assert.assertEquals(0,cache.size());
+        // 强引用不会消失
+        LockInstance lockTest = lockOperation.requireLock("test");
+        int count=1000;
+        for (int i = 0; i < count; i++) {
+            lockOperation.requireLock("test"+i).lockThen(lock->{
+
+            });
+        }
+        Assert.assertEquals(count+1,cache.entrySet().stream().filter(e->e.getValue().get()!=null).count());
+        System.gc();
+        Thread.sleep(1000);
+        Assert.assertEquals(0+1,cache.entrySet().stream().filter(e->e.getValue().get()!=null).count());
+        for (int i = 0; i < count; i++) {
+            lockOperation.requireLock("test"+i).lockThen(lock->{
+
+            });
+        }
+        Assert.assertEquals(count+1,cache.entrySet().stream().filter(e->e.getValue().get()!=null).count());
+    }
 }

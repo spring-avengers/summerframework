@@ -237,6 +237,10 @@ public class OpenFeignAutoConfiguration {
             }
         });
 
-        adapter.setArgumentResolvers(list);
+        List<HandlerMethodArgumentResolver> customResolvers =
+                adapter.getCustomArgumentResolvers ();
+        list.removeAll (customResolvers);
+        list.addAll (0, customResolvers);
+        adapter.setArgumentResolvers (list);
     }
 }

@@ -5,6 +5,8 @@ import com.bkjk.platform.lock.LockOperation;
 import com.bkjk.platform.lock.LockType;
 import com.bkjk.platform.lock.annotation.LockKey;
 import com.bkjk.platform.lock.annotation.WithLock;
+import lombok.Builder;
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -160,4 +162,43 @@ public class TestService {
             lock.unlock();
         }
     }
+
+    private final static String LOCK_NAME_MUTATE_BALANCE="mutateBalance";
+
+    @WithLock(name = LOCK_NAME_MUTATE_BALANCE,timeoutMillis = LOCK_TIMEOUT_BALANCE,keys = "#contractUpdateDTO.id")
+    public ContractUpdateDTO mutateBalance(ContractUpdateDTO contractUpdateDTO ){
+        // do something
+        try {
+            Thread.sleep(10);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return contractUpdateDTO;
+    }
+
+
+    private final static ConcurrentHashMap<Long,Long> balance=new ConcurrentHashMap<>();
+
+    private final static String LOCK_NAME_BALANCE="balance";
+    private final static long LOCK_TIMEOUT_BALANCE=30_000;
+
+    @WithLock(name = LOCK_NAME_BALANCE,timeoutMillis = LOCK_TIMEOUT_BALANCE,lockType = LockType.WRITE,keys = "#contractUpdateDTO.id")
+    public long updateBalance(ContractUpdateDTO contractUpdateDTO){
+        balance.put(contractUpdateDTO.getId(),balance.getOrDefault(contractUpdateDTO.getId(),0L)+contractUpdateDTO.getAmt());
+        return balance.get(contractUpdateDTO.getId());
+    }
+
+    @WithLock(name = LOCK_NAME_BALANCE,timeoutMillis = LOCK_TIMEOUT_BALANCE,lockType = LockType.READ)
+    public long getBalance(@LockKey Long contractUpdateDTO){
+        return balance.get(contractUpdateDTO);
+    }
+
+
+    @Data
+    @Builder
+    public static class ContractUpdateDTO{
+        private Long id;
+        private long amt;
+    }
+
 }

@@ -1,16 +1,26 @@
 package com.bkjk.platform.webapi.version;
 
-import java.lang.reflect.Method;
-
+import com.bkjk.platform.webapi.ApiController;
 import org.springframework.core.annotation.AnnotatedElementUtils;
 import org.springframework.core.annotation.AnnotationUtils;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.servlet.mvc.condition.PatternsRequestCondition;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
-import com.bkjk.platform.webapi.ApiController;
+import java.lang.reflect.Method;
 
 public class ApiVersionHandlerMapping extends RequestMappingHandlerMapping {
+
+    /**
+     * 只注册Controller，不注册feign接口
+     * @param beanType
+     * @return
+     */
+    @Override
+    protected boolean isHandler(Class<?> beanType) {
+        return AnnotatedElementUtils.hasAnnotation(beanType, Controller.class);
+    }
 
     @Override
     protected void registerHandlerMethod(Object handler, Method method, RequestMappingInfo mapping) {

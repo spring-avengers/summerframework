@@ -27,9 +27,20 @@ public class LockInstance{
 
     boolean fair = false;
     private LockType type = LockType.DEFAULT;
+    /**
+     * 锁的名称，等于【用户指定的锁名称】+【用户指定的KEYS】
+      */
     private volatile String name;
+    /**
+     * 用户指定的锁名称
+     */
+    private String originalName;
+    /**
+     * 锁定的keys，不包含originalName
+     */
+    private String originalKeys;
     private long timeoutMillis = Long.MAX_VALUE;
-    private long expireTimeMillis = 0;
+    private long expireTimeMillis = 30_000;
     private volatile Lock lock;
     private volatile ReadWriteLock readWriteLock;
     /**
@@ -76,9 +87,6 @@ public class LockInstance{
     public LockInstance createLockIfNotExist() {
         if (getLock() != null) {
             return this;
-        }
-        if (null == getName() && lockedCode != null) {
-            setName(lockedCode.getClass().getCanonicalName());
         }
         Assert.notNull(getName(), "Lock name can not be null");
         switch (getType()) {

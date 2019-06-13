@@ -1,27 +1,25 @@
 package com.bkjk.platform.monitor.logging;
 
-import java.lang.reflect.Field;
-import java.util.Iterator;
-import java.util.List;
-
+import ch.qos.logback.classic.Level;
+import ch.qos.logback.classic.Logger;
+import ch.qos.logback.classic.LoggerContext;
+import ch.qos.logback.core.Appender;
+import ch.qos.logback.core.AsyncAppenderBase;
+import ch.qos.logback.core.OutputStreamAppender;
+import ch.qos.logback.core.encoder.Encoder;
+import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
+import ch.qos.logback.core.spi.AppenderAttachable;
+import com.bkjk.platform.monitor.MonitorConfigSpringApplicationRunListener;
+import com.bkjk.platform.monitor.logging.appender.logback.AdvancedKafkaAppender;
+import com.bkjk.platform.monitor.logging.appender.logback.layout.CustomJsonLayout;
 import org.apache.skywalking.apm.toolkit.log.logback.v1.x.TraceIdPatternLogbackLayout;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.env.Environment;
 import org.springframework.util.ReflectionUtils;
 
-import com.bkjk.platform.monitor.MonitorConfigSpringApplicationRunListener;
-import com.bkjk.platform.monitor.logging.appender.logback.AdvancedKafkaAppender;
-import com.bkjk.platform.monitor.logging.appender.logback.layout.CustomJsonLayout;
-
-import ch.qos.logback.classic.Level;
-import ch.qos.logback.classic.Logger;
-import ch.qos.logback.classic.LoggerContext;
-import ch.qos.logback.classic.spi.ILoggingEvent;
-import ch.qos.logback.core.Appender;
-import ch.qos.logback.core.OutputStreamAppender;
-import ch.qos.logback.core.encoder.Encoder;
-import ch.qos.logback.core.encoder.LayoutWrappingEncoder;
-import ch.qos.logback.core.spi.AppenderAttachable;
+import java.lang.reflect.Field;
+import java.util.Iterator;
+import java.util.List;
 
 public class LogBackConfiguration extends LogConfiguration {
 
@@ -58,24 +56,33 @@ public class LogBackConfiguration extends LogConfiguration {
         }
         createBizLogger();
         for (Logger logger : loggerList) {
-            AppenderAttachable<ILoggingEvent> appenderAttachable = logger;
-            Iterator<Appender<ILoggingEvent>> iterator = appenderAttachable.iteratorForAppenders();
-            while (iterator.hasNext()) {
-                Appender<ILoggingEvent> appender = iterator.next();
-                if (appender instanceof OutputStreamAppender) {
-                    OutputStreamAppender<?> outputStreamAppender = (OutputStreamAppender<?>)appender;
-                    Encoder<?> encoder = outputStreamAppender.getEncoder();
-                    if (encoder instanceof LayoutWrappingEncoder) {
-                        TraceIdPatternLogbackLayout traceIdLayOut = new TraceIdPatternLogbackLayout();
-                        traceIdLayOut.setContext(loggerContext);
-                        traceIdLayOut.setPattern(getLogBackPattern());
-                        traceIdLayOut.start();
-                        Field field = ReflectionUtils.findField(encoder.getClass(), "layout");
-                        field.setAccessible(true);
-                        ReflectionUtils.setField(field, encoder, traceIdLayOut);
-                    }
-                }
+            AppenderAttachable appenderAttachable = logger;
+            setLayout(loggerContext,appenderAttachable.iteratorForAppenders());
+        }
+    }
+
+    private void setLayout(LoggerContext loggerContext,Iterator<Appender<?>> iterator){
+        while (iterator.hasNext()) {
+            Appender appender = iterator.next();
+            if (appender instanceof OutputStreamAppender) {
+                setLayout(loggerContext,(OutputStreamAppender<?>)appender);
+            }else if(appender instanceof AsyncAppenderBase){
+                AsyncAppenderBase asyncAppenderBase= (AsyncAppenderBase) appender;
+                setLayout(loggerContext,asyncAppenderBase.iteratorForAppenders());
             }
+        }
+    }
+
+    private void setLayout(LoggerContext loggerContext,OutputStreamAppender outputStreamAppender){
+        Encoder<?> encoder = outputStreamAppender.getEncoder();
+        if (encoder instanceof LayoutWrappingEncoder) {
+            TraceIdPatternLogbackLayout traceIdLayOut = new TraceIdPatternLogbackLayout();
+            traceIdLayOut.setContext(loggerContext);
+            traceIdLayOut.setPattern(getLogBackPattern());
+            traceIdLayOut.start();
+            Field field = ReflectionUtils.findField(encoder.getClass(), "layout");
+            field.setAccessible(true);
+            ReflectionUtils.setField(field, encoder, traceIdLayOut);
         }
     }
 

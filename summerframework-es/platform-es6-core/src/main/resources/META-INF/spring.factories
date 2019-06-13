@@ -1,0 +1,1 @@
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.bkjk.platform.elasticsearch.ElasticSearchAutoConfiguration

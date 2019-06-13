@@ -11,6 +11,7 @@
 	<modules>
 		<module>platform-common-dependencies</module>
 		<module>platform-common-version-api</module>
+		<module>platform-common-spring</module>
 	</modules>
 	<dependencyManagement>
 		<dependencies>

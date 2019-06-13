@@ -12,7 +12,7 @@
 		<version>2.0.0.RELEASE</version>
 	</parent>
 	<properties>
-		<skywalking-opentracing.version>6.0.0-GA</skywalking-opentracing.version>
+		<skywalking-opentracing.version>5.0.0-RC-SNAPSHOT</skywalking-opentracing.version>
 		<logbackjson.version>0.1.5</logbackjson.version>
 		<p6spy.version>3.8.0</p6spy.version>
 		<jsqlparser.version>1.2</jsqlparser.version>

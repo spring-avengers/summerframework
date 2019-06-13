@@ -1,0 +1,18 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Wed Jun 27 10:07:05 CST 2018
+http\://nexus.bkjk-inc.com/nexus/content/groups/public/.error=
+http\://maven.aliyun.com/nexus/content/groups/public/.error=
+http\://maven.aliyun.com/nexus/content/groups/public/.lastUpdated=1530065225383
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Business-Releases/.lastUpdated=1530065225060
+http\://central.maven.org/maven2/.lastUpdated=1530065225733
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Business-Releases/.error=
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Business-Snapshots/.error=
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Platform-Releases/.lastUpdated=1530065225196
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Platform-Releases/.error=
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Platform-Snapshots/.lastUpdated=1530065225327
+http\://maven.oschina.net/content/repositories/thirdparty/.error=Could not transfer artifact com.sohu.tv\:cachecloud-open-client\:pom\:1.2 from/to nexus-osc-thirdparty (http\://maven.oschina.net/content/repositories/thirdparty)\: maven.oschina.net
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Platform-Snapshots/.error=
+http\://central.maven.org/maven2/.error=
+http\://nexus.bkjk-inc.com/nexus/content/groups/public/.lastUpdated=1530064609369
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Business-Snapshots/.lastUpdated=1530065225130
+@default-nexus-osc-thirdparty-http\://maven.oschina.net/content/repositories/thirdparty/.lastUpdated=1530064609378

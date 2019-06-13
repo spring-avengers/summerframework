@@ -1,15 +1,8 @@
 # 说明
 
-* 支持原生MyBatis的所有功能
-* 扩展MyBatis，在其基础上增加了加解密和字段hash功能。
+* 完全兼容MyBatis-Plus，在其基础上增加了加解密和字段hash功能。
 * 分页插件已默认启用
 * 对Druid数据源的参数进行了优化，简化配置，只需要配置（JdbcUrl、UserName、Password）三个即可，默认数据库是Mysql
-* 扩展Mybatis-Plus(3.0.7.1),在BaseMapper上，添加批量插入、批量更新、有则更新无在插入功能
-
-| Mybatis-Plus | platform-starter-mybatis |
-| ------ | ------ |
-| 批量插入是通过flushstatement来做，性能低下 | 利用原生的Mysql/Oracle的批量插入实现|
-| saveOrUpdate是通过先查询后判断再插入，性能低下 | 利用原生的Mysql/Oracle方式来实现 |
 
 # 使用方式
 
@@ -269,12 +262,15 @@ public class CityService {
 
 }
 ```
-#### 配置
-配置项的prefix从mybatis改为 mybatis-plus，比如加载xml的配置
-```yml
-mybatis-plus:
-  mapper-locations: classpath*:mapper/*.xml
-```
+
+参考 [platform-starter-mybatis-sample](https://code.bkjk-inc.com/projects/SOA/repos/summerframework2/browse/summerframework-samples/platform-starter-mybatis-sample)
+
+## 从1.X升级到2.X
+
+版本1.X中是我们自己实现了SQL的拼接与执行，2.X中我们改用MyBatis-Plus。原因是对比了基于MyBatis的各种ORM之后，发现MyBatis-Plus的功能最为完善（批量、分页、枚举转换、逻辑删除、乐观锁等都有）不需要重造轮子了。
+
+### 1.X与2.X的代码差异
+
 #### 注解
 
 在1.X中实体不需要注解，而2.X中实体必须有注解
@@ -285,56 +281,35 @@ mybatis-plus:
 
 ***注意：主键注解的type一定要写，AUTO表示自增主键***，如果希望使用自定义主键参考[Sequence主键](https://mp.baomidou.com/guide/sequence.html)
 
+#### MyBaseMapper
+
+* 再1.X中用BaseMapper，在2.X中用 MyBaseMapper （添加了一些方便使用的方法）
+* 在1.X中，BaseMapper 的泛型包括实体和主键的类型，2.X中只包含实体
+* 在1.X中，BaseMapper 里的方法参数中必须包含Class，2.X中不需要包含
+* 在1.X中，分页的第一页的页码是0，2.X中第一页的页码是1。
+* 在1.X中，查询条件是map，2.X中查询条件是map、实体对象或者Wrapper对象
+* 在1.X中，提供了模糊查询的方法，2.X中需要用Wrapper来自己组装模糊查询的条件
+* 2.X版本提供一个获取字段名的工具类，可以替换之前用`map.put("columnName",value)`的代码。`import static com.bkjk.platform.mybatis.util.MyBatisUtil.getFieldName;`
+
+方法对照表
+
+| 1.X | 2.X |
+| ------ | ------ |
+| insert | 通过MyBaseMapper兼容 |
+| insertSelective | 通过MyBaseMapper兼容 |
+| updateById | 通过MyBaseMapper兼容 |
+| updateByIdSelective | 通过MyBaseMapper兼容 |
+| deleteById | 通过MyBaseMapper兼容 |
+| selectById | 通过MyBaseMapper兼容 |
+| selectByParams | 通过MyBaseMapper兼容 |
+| selectCount | selectPageAccurate |
+| selectPage | selectPageAccurate |
+| selectCountVague | selectPageBlurry  |
+| seletePageVague | selectPageBlurry  |
+
+
 # 详细功能示例代码和测试用例
-## 枚举
-包含方法getValue和fromValue的枚举会自动封包解包，其中getValue是无参且返回int、字符串或者其它能被数据库识别的类型；fromValue必须是***静态***的、有且仅有一个参数、返回枚举类型。
 
-
-```java
-public enum State {
-    // 安租贝
-    KE_RENT(0, "安租贝");
-    private final int code;
-
-    private final String descp;
-
-    State(int code, String descp) {
-        this.code = code;
-        this.descp = descp;
-    }
-
-    public int getCode() {
-        return code;
-    }
-
-    public String getDescp() {
-        return descp;
-    }
-
-    public static String getStatus(int code) {
-        for (State status : State.values()) {
-            if (status.getCode() == code) {
-                return status.name();
-            }
-        }
-        return "";
-    }
-
-    public int getValue(){
-        return code;
-    }
-
-    public static State fromValue(int code){
-        for (State status : State.values()) {
-            if (status.getCode() == code) {
-                return status;
-            }
-        }
-        return null;
-    }
-
-}
-```
 ## 批量更新
 
 开发中经常遇到要更新多条数据的情况，这时可用下面两种方式。建议采用第一种，根据主键进行更新，虽然写起来麻烦，但是效率更高，也更安全。

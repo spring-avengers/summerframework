@@ -15,4 +15,9 @@ public class RedisLockHandler implements LockHandler {
     public boolean doLock(LockInstance lockInstance) throws InterruptedException {
         return ((RedisLock)lockInstance.getLock()).tryLock(lockInstance.getTimeoutMillis(),lockInstance.getExpireTimeMillis());
     }
+
+    @Override
+    public boolean doLock(long timeoutMillis,LockInstance lockInstance) throws InterruptedException {
+        return ((RedisLock)lockInstance.getLock()).tryLock(timeoutMillis,lockInstance.getExpireTimeMillis());
+    }
 }

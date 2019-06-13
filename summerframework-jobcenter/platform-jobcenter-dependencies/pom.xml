@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<artifactId>platform-jobcenter-dependencies</artifactId>
+	<version>2.0.0.RELEASE</version>
+	<packaging>pom</packaging>
+	<name>platform-jobcenter-dependencies</name>
+	<parent>
+		<artifactId>summerframework-dependencies-parent</artifactId>
+		<groupId>com.bkjk.platform.summerframework</groupId>
+		<version>2.0.0.RELEASE</version>
+	</parent>
+	<properties>
+		<xxljob.version>1.9.3.RELEASE</xxljob.version>
+	</properties>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.xuxueli</groupId>
+				<artifactId>xxl-job-core</artifactId>
+				<version>${xxljob.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.bkjk.platform.summerframework</groupId>
+				<artifactId>platform-jobcenter-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.bkjk.platform.summerframework</groupId>
+				<artifactId>platform-starter-jobcenter</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

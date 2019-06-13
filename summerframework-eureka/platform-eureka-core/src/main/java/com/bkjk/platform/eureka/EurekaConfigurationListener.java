@@ -40,6 +40,8 @@ public class EurekaConfigurationListener implements SpringApplicationRunListener
 
         defaultProperties.put("ribbon.MaxAutoRetries", 0);
         defaultProperties.put("ribbon.MaxAutoRetriesNextServer", 0);
+        defaultProperties.put("eureka.client.healthcheck.enabled", true);
+        defaultProperties.put("eureka.client.instanceInfoReplicationIntervalSeconds", 10);
         Properties lastDefaultProps = new Properties();
         defaultProperties.forEach((k, v) -> {
             if (!environment.containsProperty(k)) {

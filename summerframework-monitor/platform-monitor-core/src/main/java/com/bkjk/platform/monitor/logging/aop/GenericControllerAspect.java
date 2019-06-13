@@ -1,8 +1,7 @@
 package com.bkjk.platform.monitor.logging.aop;
 
-import com.bkjk.platform.monitor.metric.MicrometerUtil;
-import com.bkjk.platform.monitor.util.JsonUtil;
-import com.bkjk.platform.monitor.util.RequestUtil;
+import java.lang.annotation.Annotation;
+
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.AfterThrowing;
@@ -18,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.lang.annotation.Annotation;
+import com.bkjk.platform.monitor.metric.MicrometerUtil;
+import com.bkjk.platform.monitor.util.JsonUtil;
+import com.bkjk.platform.monitor.util.RequestUtil;
 
 @Aspect
 public class GenericControllerAspect extends MonitorAspect implements ControllerAspect {
@@ -40,8 +41,8 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
     }
 
     @Override
-    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *) ||"
-            + "within(@org.springframework.stereotype.Controller *)")
+    @Pointcut("within(@org.springframework.web.bind.annotation.RestController *)"
+        + " ||within(@org.springframework.stereotype.Controller *)")
     public void allPublicControllerMethodsPointcut() {
     }
 
@@ -49,7 +50,7 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
         Object argValueToUse = argValue;
         if (enableDataScrubbing) {
             if (paramBlacklist.contains(argName.toLowerCase())
-                    || (paramBlacklistRegex != null && paramBlacklistRegex.matcher(argName).matches())) {
+                || (paramBlacklistRegex != null && paramBlacklistRegex.matcher(argName).matches())) {
                 argValueToUse = scrubbedValue;
             }
         }
@@ -63,9 +64,9 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
         String returnType = null;
         Throwable throwable = null;
         boolean needLog = true;
-        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature)proceedingJoinPoint.getSignature();
         if (methodSignature.getMethod().getAnnotation(DisableMonitorLogging.class) != null
-                || proceedingJoinPoint.getTarget().getClass().getAnnotation(DisableMonitorLogging.class) != null) {
+            || proceedingJoinPoint.getTarget().getClass().getAnnotation(DisableMonitorLogging.class) != null) {
             needLog = false;
         }
         RequestMapping methodRequestMapping = null;
@@ -92,7 +93,7 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
             if (needLog) {
                 if (returnType != null) {
                     logPostExecutionData(proceedingJoinPoint, timer, result, returnType, methodRequestMapping,
-                            classRequestMapping, throwable);
+                        classRequestMapping, throwable);
                 }
             }
         }
@@ -100,7 +101,7 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
     }
 
     private void logFunctionArguments(String[] argNames, Object[] argValues, StringBuilder stringBuilder,
-                                      Annotation annotations[][], RequestMapping methodRequestMapping) {
+        Annotation annotations[][], RequestMapping methodRequestMapping) {
         boolean someArgNeedsSerialization = false;
         if (methodRequestMapping != null) {
             for (String consumes : methodRequestMapping.consumes()) {
@@ -139,9 +140,9 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
 
     @Override
     public void logPostExecutionData(ProceedingJoinPoint proceedingJoinPoint, StopWatch timer, Object result,
-                                     String returnType, RequestMapping methodRequestMapping, RequestMapping classRequestMapping,
-                                     Throwable throwable) {
-        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+        String returnType, RequestMapping methodRequestMapping, RequestMapping classRequestMapping,
+        Throwable throwable) {
+        MethodSignature methodSignature = (MethodSignature)proceedingJoinPoint.getSignature();
         String calssName = proceedingJoinPoint.getTarget().getClass().getSimpleName();
         String methodName = calssName + "." + methodSignature.getName() + "()";
         LOG.info(methodName + " took [" + timer.getTotalTimeMillis() + " ms] to complete");
@@ -178,7 +179,7 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
 
     @Override
     public void logPreExecutionData(ProceedingJoinPoint proceedingJoinPoint, RequestMapping methodRequestMapping) {
-        MethodSignature methodSignature = (MethodSignature) proceedingJoinPoint.getSignature();
+        MethodSignature methodSignature = (MethodSignature)proceedingJoinPoint.getSignature();
         String calssName = proceedingJoinPoint.getTarget().getClass().getSimpleName();
         String methodName = calssName + "." + methodSignature.getName() + "()";
         Object argValues[] = proceedingJoinPoint.getArgs();
@@ -186,7 +187,7 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
         String requestContext = requestUtil.getRequestContext().toString();
         Annotation annotations[][] = methodSignature.getMethod().getParameterAnnotations();
         StringBuilder preMessage = new StringBuilder().append(methodName);
-        if (argValues.length > 0) {
+        if (argValues != null && argValues.length > 0 && argNames != null && argNames.length > 0) {
             logFunctionArguments(argNames, argValues, preMessage, annotations, methodRequestMapping);
         }
         preMessage.append(" called via ").append(requestContext);
@@ -200,7 +201,7 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
 
     @Override
     @AfterThrowing(pointcut = "allPublicControllerMethodsPointcut() || methodOrClassMonitorEnabledPointcut()",
-            throwing = "t")
+        throwing = "t")
     public void onException(JoinPoint joinPoint, Throwable t) {
         String methodName = joinPoint.getSignature().getName() + "()";
         LOG.info(methodName + " threw exception: [" + t + "]");
@@ -226,9 +227,9 @@ public class GenericControllerAspect extends MonitorAspect implements Controller
             long fileSize = -1;
 
             if (object instanceof ByteArrayResource) {
-                fileSize = ((ByteArrayResource) object).contentLength();
+                fileSize = ((ByteArrayResource)object).contentLength();
             } else if (object instanceof MultipartFile) {
-                fileSize = ((MultipartFile) object).getSize();
+                fileSize = ((MultipartFile)object).getSize();
             }
 
             if (fileSize != -1) {

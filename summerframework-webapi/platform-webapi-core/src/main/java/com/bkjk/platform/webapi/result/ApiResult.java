@@ -1,14 +1,15 @@
 package com.bkjk.platform.webapi.result;
 
+import static com.bkjk.platform.webapi.version.Constant.VERSION_SUMMER2;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.Builder;
 import lombok.Data;
 
-import static com.bkjk.platform.webapi.version.Constant.VERSION_SUMMER2;
-
 @Data
 @Builder
-public class ApiResult<T> implements ApiResultWrapper<T> {
+class ApiResult<T> implements ApiResultWrapper<T> {
     boolean success;
     String code;
     String error;

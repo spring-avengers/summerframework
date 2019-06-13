@@ -44,10 +44,10 @@ public @interface WithLock {
     long timeoutMillis() default Long.MAX_VALUE;
 
     /**
-     * 锁的失效时间，单位毫秒。有些锁的实现上是没有失效时间的，比如Java自带的重入锁，只要获得锁就一直持有，不存在失效时间。
+     * 锁续期的时间，单位毫秒。定时续期锁时会用到它，有些锁的实现上是没有失效时间的，比如Java自带的重入锁，只要获得锁就一直持有，不存在失效时间。
      * @return
      */
-    long expireTimeMillis() default 0;
+    long expireTimeMillis() default 30_000;
 
     String [] keys() default {};
 

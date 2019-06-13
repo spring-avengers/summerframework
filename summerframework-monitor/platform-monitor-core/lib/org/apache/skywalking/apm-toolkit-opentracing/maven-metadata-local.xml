@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>org.apache.skywalking</groupId>
+  <artifactId>apm-toolkit-opentracing</artifactId>
+  <versioning>
+    <versions>
+      <version>5.0.0-RC-SNAPSHOT</version>
+    </versions>
+    <lastUpdated>20181221085607</lastUpdated>
+  </versioning>
+</metadata>

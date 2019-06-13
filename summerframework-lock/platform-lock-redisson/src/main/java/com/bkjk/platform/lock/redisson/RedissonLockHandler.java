@@ -19,4 +19,10 @@ public class RedissonLockHandler implements LockHandler {
         return ((RLock)lockInstance.getLock()).tryLock(lockInstance.getTimeoutMillis(),lockInstance.getExpireTimeMillis()<=0?-1:lockInstance.getExpireTimeMillis(), TimeUnit.MILLISECONDS)
                 && !Thread.currentThread().isInterrupted();
     }
+
+    @Override
+    public boolean doLock(long timeoutMillis,LockInstance lockInstance) throws InterruptedException {
+        return ((RLock)lockInstance.getLock()).tryLock(timeoutMillis,lockInstance.getExpireTimeMillis()<=0?-1:lockInstance.getExpireTimeMillis(), TimeUnit.MILLISECONDS)
+                && !Thread.currentThread().isInterrupted();
+    }
 }

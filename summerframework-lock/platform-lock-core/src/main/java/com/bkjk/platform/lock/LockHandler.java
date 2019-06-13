@@ -32,6 +32,14 @@ public interface LockHandler {
     };
 
     /**
+     * 加锁
+     * @return
+     */
+    default boolean doLock(long timeoutMillis,LockInstance lockInstance) throws InterruptedException {
+        return lockInstance.getLock().tryLock(timeoutMillis, TimeUnit.MILLISECONDS);
+    };
+
+    /**
      * 解锁
      * @return
      */

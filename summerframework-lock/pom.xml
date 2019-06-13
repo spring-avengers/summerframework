@@ -13,6 +13,7 @@
 		<module>platform-lock-core</module>
 		<module>platform-lock-redisson</module>
 		<module>platform-lock-redis</module>
+		<module>platform-lock-database</module>
 		<module>platform-starter-lock</module>
 		<module>platform-starter-lock-redisson</module>
 		<module>platform-starter-lock-redis</module>

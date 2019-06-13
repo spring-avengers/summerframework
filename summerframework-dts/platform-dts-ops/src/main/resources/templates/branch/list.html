@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en-us" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head th:include="common/iframeInclud :: header"></head>
+
+<body class="gray-bg">
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>分支事务管理
+						<small>分支事务列表</small>
+					</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+						<a class="close-link">
+							<i class="fa fa-times"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div>
+						<input name="transId" id = "transId" type="hidden"  th:value="${globalRecord.transId}" />
+						<form class="form-horizontal m-t">
+							<div class="form-group">
+								<label class="col-sm-2 control-label" >全局事务编号: </label>
+								<div class="col-sm-4">
+									<input class="form-control" type="text" readonly th:value="${globalRecord.transId}" />
+								</div>
+								<label class="col-sm-2 control-label" >全局事务状态: </label>
+								<div class="col-sm-4">
+									<input class="form-control" type="text"  readonly th:value="${globalRecord.stateStr}" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" >发起事务者的信息: </label>
+								<div class="col-sm-4">
+									<textarea class="form-control" rows="2" readonly th:inline="text" >[[${globalRecord.clientInfo} ]]</textarea>
+								</div>
+								<label class="col-sm-2 control-label" >发起事务者IP: </label>
+								<div class="col-sm-4">
+									<input class="form-control" type="text"  readonly th:value="${globalRecord.clientIp}" />
+								</div>
+							</div>
+							<div class="form-group">
+								<label class="col-sm-2 control-label" >全局事务开始时间: </label>
+								<div class="col-sm-4">
+									<input class="form-control" type="text" readonly  th:value="${globalRecord.createdTimeStr}" />
+								</div>
+								<label class="col-sm-2 control-label" >全局事务更新时间: </label>
+								<div class="col-sm-4">
+									<input class="form-control" type="text" readonly  th:value="${globalRecord.modifiedTimeStr}" />
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="btn-group hidden-xs" id="branchToolbar" role="group">
+						<button type="button" class="btn btn-outline btn-default" onclick="add()">
+							<i class="glyphicon glyphicon-plus" aria-hidden="true"></i>
+						</button>
+						<button type="button" class="btn btn-outline btn-default" onclick="batchRemove()">
+							<i class="glyphicon glyphicon-trash" aria-hidden="true"></i>
+		R				</button>
+						<label class="control-label" style="margin-right: 15px;margin-left: 15px">  分支事务状态: </label>
+						<select class="form-control selectpicker" data-width="auto" data-live-search="true" data-style="btn-white" id="stateSelect" name="stateSelect">
+							<option value="-1">所有</option>
+							<option th:each="branchLogState:${BranchLogStates}" th:value="${branchLogState.value}" th:text="${branchLogState.name}"/>
+						</select>
+					</div>
+					<table id="branchTable"></table>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<scpript th:include="common/iframeInclud :: footer"></scpript>
+<script type="text/javascript" th:src="@{/js/appjs/branch/list.js}"></script>
+
+</body>
+
+</html>

@@ -61,17 +61,10 @@ public class LockAspect implements ApplicationContextAware {
         return lockFactory;
     }
 
-    private LockInstance initLockInfo(ProceedingJoinPoint joinPoint, WithLock withLock, LockInstance lockInstance) {
-        lockInstance.setFair(withLock.fair());
-        lockInstance.setType(withLock.lockType());
-        if(withLock.timeoutMillis()>0){
-            lockInstance.setTimeoutMillis(withLock.timeoutMillis());
-        }
-        if(withLock.expireTimeMillis()>0){
-            lockInstance.setExpireTimeMillis(withLock.expireTimeMillis());
-        }
+    private LockInstance initLockInfo(ProceedingJoinPoint joinPoint, WithLock withLock) {
         // 获取key
         List<Object> keyList = new ArrayList<>();
+        List<Object> originalKeys=new ArrayList<>();
         // 锁名
         if (StringUtils.isEmpty(withLock.name())) {
             keyList.add(String.format("%s.%s", joinPoint.getSignature().getDeclaringTypeName(), joinPoint.getSignature().getName()));
@@ -95,6 +88,7 @@ public class LockAspect implements ApplicationContextAware {
                 Object key = parser.parseExpression(elKey).getValue(context);
                 if (key != null) {
                     keyList.add(key);
+                    originalKeys.add(key);
                 }
             }
         }
@@ -107,19 +101,25 @@ public class LockAspect implements ApplicationContextAware {
             if (keyAnnotation != null && value != null) {
 //                ClassUtils.isPrimitiveOrWrapper(value.getClass()); // 最好只支持基本类型和string
                 keyList.add(value);
+                originalKeys.add(value);
             }
         }
 
-        lockInstance.setName(lockConfiguration.getPrefix() + keyList.stream().filter(Objects::nonNull).map(Object::toString).collect(Collectors.joining(".")));
+        String name=lockConfiguration.getPrefix() + keyList.stream().filter(Objects::nonNull).map(Object::toString).collect(Collectors.joining("."));
+        LockInstance lockInstance=lockOperation.requireLock(name,withLock.timeoutMillis(),withLock.expireTimeMillis(),withLock.lockType(),withLock.fair(),getLockFactory(withLock));
+        if(!StringUtils.isEmpty(withLock.name())){
+            lockInstance.setOriginalName(withLock.name());
+        }
+        if(originalKeys.size()>0){
+            lockInstance.setOriginalKeys(originalKeys.stream().map(Object::toString).collect(Collectors.joining(".")));
+        }
         return lockInstance;
     }
 
     @Around(value = "@annotation(withLock)")
     public Object around(ProceedingJoinPoint joinPoint, WithLock withLock) throws Throwable {
-        LockInstance lockInstance = lockOperation.requireLock();
         WithLock synthesizedWithLock = AnnotationUtils.synthesizeAnnotation(withLock, null);
-        lockInstance.lockFactory(getLockFactory(synthesizedWithLock));
-        initLockInfo(joinPoint, synthesizedWithLock, lockInstance);
+        LockInstance lockInstance=initLockInfo(joinPoint, synthesizedWithLock);
         lockInfoThreadLocal.set(lockInstance);
         AtomicReference<Object> returnValue = new AtomicReference<>();
         AtomicReference<Throwable> throwable = new AtomicReference<>();

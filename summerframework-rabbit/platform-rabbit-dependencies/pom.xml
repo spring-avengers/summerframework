@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<artifactId>summerframework-dependencies-parent</artifactId>
+		<groupId>com.bkjk.platform.summerframework</groupId>
+		<version>2.0.0.RELEASE</version>
+	</parent>
+	<artifactId>platform-rabbit-dependencies</artifactId>
+	<version>2.0.0.RELEASE</version>
+	<packaging>pom</packaging>
+	<name>platform-rabbit-dependencies</name>
+	<dependencyManagement>
+		<dependencies>
+			<dependency>
+				<groupId>com.bkjk.platform.summerframework</groupId>
+				<artifactId>platform-rabbit-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>com.bkjk.platform.summerframework</groupId>
+				<artifactId>platform-starter-rabbit</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
+</project>

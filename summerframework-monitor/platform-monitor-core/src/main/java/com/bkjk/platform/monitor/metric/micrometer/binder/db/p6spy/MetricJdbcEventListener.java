@@ -1,5 +1,20 @@
 package com.bkjk.platform.monitor.metric.micrometer.binder.db.p6spy;
 
+import com.bkjk.platform.monitor.metric.MicrometerUtil;
+import com.p6spy.engine.common.ConnectionInformation;
+import com.p6spy.engine.common.Loggable;
+import com.p6spy.engine.common.StatementInformation;
+import com.p6spy.engine.event.SimpleJdbcEventListener;
+import com.p6spy.engine.logging.Category;
+import io.micrometer.core.instrument.Metrics;
+import io.micrometer.core.instrument.Tag;
+import io.micrometer.core.instrument.Tags;
+import io.micrometer.core.instrument.Timer;
+import net.sf.jsqlparser.parser.CCJSqlParserManager;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.util.StringUtils;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.io.StringReader;
@@ -8,27 +23,14 @@ import java.util.Objects;
 import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.StringUtils;
-
-import com.bkjk.platform.monitor.metric.MicrometerUtil;
-import com.p6spy.engine.common.ConnectionInformation;
-import com.p6spy.engine.common.Loggable;
-import com.p6spy.engine.common.StatementInformation;
-import com.p6spy.engine.event.SimpleJdbcEventListener;
-import com.p6spy.engine.logging.Category;
-
-import io.micrometer.core.instrument.Metrics;
-import io.micrometer.core.instrument.Tag;
-import io.micrometer.core.instrument.Tags;
-import io.micrometer.core.instrument.Timer;
-import net.sf.jsqlparser.parser.CCJSqlParserManager;
-
 public class MetricJdbcEventListener extends SimpleJdbcEventListener {
     public static class SqlParser {
 
         private static final CCJSqlParserManager PARSER_MANAGER = new CCJSqlParserManager();
+        /**
+         * allowMultiQueries=true 时，SQL的分隔符
+         **/
+        public static final String SPLIT_CHAR=";";
 
         public static String getSqlType(Category category, String sql) {
             if (StringUtils.isEmpty(sql)) {
@@ -39,7 +41,10 @@ public class MetricJdbcEventListener extends SimpleJdbcEventListener {
                 net.sf.jsqlparser.statement.Statement stmt = PARSER_MANAGER.parse(sqlReader);
                 return stmt.getClass().getSimpleName().toLowerCase();
             } catch (Throwable ignore) {
-                logger.info("Error parsing SQL {}", sql);
+                if(sql.contains(SPLIT_CHAR)){
+                    return getSqlType(category,sql.split(SPLIT_CHAR)[0]);
+                }
+                logger.info("Error parsing SQL {}", sql,ignore);
                 return category.getName();
             } finally {
                 if (Objects.nonNull(sqlReader)) {

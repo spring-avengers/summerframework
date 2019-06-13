@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en-us" xmlns:th="http://www.thymeleaf.org">
+<html>
+<head th:include="common/iframeInclud :: header"></head>
+
+<body class="gray-bg">
+
+
+<div class="wrapper wrapper-content animated fadeInRight">
+	<div class="row">
+		<div class="col-sm-12">
+			<div class="ibox float-e-margins">
+				<div class="ibox-title">
+					<h5>全局事务管理
+						<small>全局事务列表</small>
+					</h5>
+					<div class="ibox-tools">
+						<a class="collapse-link">
+							<i class="fa fa-chevron-up"></i>
+						</a>
+						<a class="close-link">
+							<i class="fa fa-times"></i>
+						</a>
+					</div>
+				</div>
+				<div class="ibox-content">
+					<div class="btn-group hidden-xs" id="dtsToolbar" role="group">
+						<div>
+							<label class="col-sm-1 control-label">From:</label>
+							<div class="col-sm-3">
+								<input   class="form-control" name="startTime" placeholder="请选择起始时间" id="startTime" type="text"  data-date-format="yyyy-mm-dd hh:ii">
+							</div>
+
+							<label class="col-sm-1 control-label" >To:</label>
+							<div class="col-sm-3">
+								<input class="form-control" name="endTime" placeholder="请选择结束时间" id="endTime" type="text"  data-date-format="yyyy-mm-dd hh:ii">
+							</div>
+							<label class="col-sm-1 control-label" >状态:</label>
+							<div class="col-sm-2">
+								<select class="selectpicker" data-width="auto" data-live-search="true" data-style="btn-white" id="stateSelect" name="stateSelect">
+									<option value="-1">所有</option>
+									<option th:each="globalState:${GlobalLogStates}" th:value="${globalState.value}" th:text="${globalState.name}"/>
+								</select>
+							</div>
+						</div>
+					</div>
+					<table id="dtsTable"></table>
+
+				</div>
+			</div>
+		</div>
+	</div>
+
+</div>
+
+<scpript th:include="common/iframeInclud :: footer"></scpript>
+<script type="text/javascript" th:src="@{/js/appjs/dts/list.js}"></script>
+
+</body>
+
+</html>

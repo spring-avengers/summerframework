@@ -29,7 +29,7 @@ public class AutoRequestBodyProcessor extends RequestResponseBodyMethodProcessor
     protected boolean checkRequired(MethodParameter parameter) {
         if (AnnotatedElementUtils.hasAnnotation(parameter.getContainingClass(), ApiController.class)){
             ApiController ann = AnnotationUtils.findAnnotation(parameter.getContainingClass(), ApiController.class);
-            if(ann.requestBody()){
+            if(ann.requestBody()&&!hasSpringAnnotation(parameter)){
                 return true;
             }
         }
@@ -41,11 +41,20 @@ public class AutoRequestBodyProcessor extends RequestResponseBodyMethodProcessor
     public boolean supportsParameter(MethodParameter parameter) {
         if (AnnotatedElementUtils.hasAnnotation(parameter.getContainingClass(), ApiController.class)){
             ApiController ann = AnnotationUtils.findAnnotation(parameter.getContainingClass(), ApiController.class);
-            if(ann.requestBody()){
+            if(ann.requestBody()&&!hasSpringAnnotation(parameter)){
                 return true;
             }
         }
         return super.supportsParameter(parameter);
+    }
+
+    private boolean hasSpringAnnotation(MethodParameter parameter){
+        for(Annotation ann:parameter.getParameterAnnotations()){
+            if(ann.annotationType().getPackage().getName().startsWith("org.springframework.web.bind.annotation")){
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

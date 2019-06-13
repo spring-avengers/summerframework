@@ -1,0 +1,18 @@
+#NOTE: This is an Aether internal implementation file, its format can be changed without prior notice.
+#Thu Nov 08 14:39:53 CST 2018
+http\://nexus.bkjk-inc.com/nexus/content/groups/public/.error=
+http\://nexus.bkjk-inc.com/nexus/content/groups/Bkjk-Provider-Group/.error=
+http\://maven.aliyun.com/nexus/content/groups/public/.error=
+http\://nexus.bkjk-inc.com/nexus/content/repositories/thirdparty/.error=
+http\://nexus.bkjk-inc.com/nexus/content/repositories/thirdparty/.lastUpdated=1541659193873
+http\://maven.aliyun.com/nexus/content/groups/public/.lastUpdated=1532570312441
+http\://nexus.bkjk-inc.com/nexus/content/groups/Bkjk-Provider-Group/.lastUpdated=1532570311611
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Business-Releases/.lastUpdated=1532570311715
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Business-Releases/.error=
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Business-Snapshots/.error=
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Platform-Releases/.lastUpdated=1532570311946
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Platform-Releases/.error=
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Platform-Snapshots/.lastUpdated=1532570312026
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Platform-Snapshots/.error=
+http\://nexus.bkjk-inc.com/nexus/content/groups/public/.lastUpdated=1541659192757
+http\://nexus.bkjk-inc.com/nexus/content/repositories/Bkjk-Business-Snapshots/.lastUpdated=1532570311845

@@ -1,0 +1,2 @@
+org.springframework.boot.env.EnvironmentPostProcessor=com.bkjk.platform.rabbit.ExcludeSpringBootRabbitAutoConfigProcessor
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.bkjk.platform.rabbit.RabbitAutoConfiguration

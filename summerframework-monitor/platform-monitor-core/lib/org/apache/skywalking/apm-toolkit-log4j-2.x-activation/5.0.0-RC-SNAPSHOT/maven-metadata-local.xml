@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata modelVersion="1.1.0">
+  <groupId>org.apache.skywalking</groupId>
+  <artifactId>apm-toolkit-log4j-2.x-activation</artifactId>
+  <version>5.0.0-RC-SNAPSHOT</version>
+  <versioning>
+    <snapshot>
+      <localCopy>true</localCopy>
+    </snapshot>
+    <lastUpdated>20181221085606</lastUpdated>
+    <snapshotVersions>
+      <snapshotVersion>
+        <classifier>sources</classifier>
+        <extension>jar</extension>
+        <value>5.0.0-RC-SNAPSHOT</value>
+        <updated>20181221085606</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>jar</extension>
+        <value>5.0.0-RC-SNAPSHOT</value>
+        <updated>20181221085606</updated>
+      </snapshotVersion>
+      <snapshotVersion>
+        <extension>pom</extension>
+        <value>5.0.0-RC-SNAPSHOT</value>
+        <updated>20181221085606</updated>
+      </snapshotVersion>
+    </snapshotVersions>
+  </versioning>
+</metadata>

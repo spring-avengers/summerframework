@@ -1,0 +1,11 @@
+spring:
+  application:
+    name: soa-dts
+    group: platform
+    version: 1.0.0
+eureka:
+  instance:
+    prefer-ip-address: true
+  client:
+    serviceUrl:
+      defaultZone: http://eureka.dev.bkjk.cn/eureka/

@@ -7,6 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.server.ServerHttpResponse;
 
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 /**
  * @Program: summerframework2
@@ -31,6 +33,14 @@ public class ApiResultUtil {
 
     public static final void addApiResultToResponseHeader(ServerHttpResponse response){
 
+    }
+
+    public static String encodeForHeader(String v){
+        try {
+            return  URLEncoder.encode(v,"UTF-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -62,6 +72,6 @@ public class ApiResultUtil {
         stringBuilder.append(String.format("\"time\":%s,",result.getTime()));
         stringBuilder.append(String.format("\"success\":%s",result.isSuccess()));
         stringBuilder.append("}");
-        return stringBuilder.toString();
+        return encodeForHeader(stringBuilder.toString());
     }
 }

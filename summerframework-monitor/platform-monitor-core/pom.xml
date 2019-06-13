@@ -9,6 +9,7 @@
 	<packaging>jar</packaging>
 	<description>platform-monitor-core</description>
 	<properties>
+		<!-- 通过dependencyManagement 引入micrometer时，如果应用自己有其它的parent，会覆盖框架的版本，所以这里强制设置固定版本 -->
 		<micrometer.fix.version>1.1.0</micrometer.fix.version>
 	</properties>
 	<dependencies>
@@ -92,11 +93,6 @@
 		</dependency>
 		<!-- database metrics -->
 		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>p6spy</groupId>
 			<artifactId>p6spy</artifactId>
 		</dependency>
@@ -136,11 +132,6 @@
 			<optional>true</optional>
 		</dependency>
 		<dependency>
-			<groupId>com.bkjk.platform.summerframework</groupId>
-			<artifactId>platform-openfeign-core</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
 			<groupId>org.springframework.cloud</groupId>
 			<artifactId>spring-cloud-netflix-core</artifactId>
 			<optional>true</optional>
@@ -151,15 +142,33 @@
 			<artifactId>hazelcast</artifactId>
 			<optional>true</optional>
 		</dependency>
-		<!--qmqp -->
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-amqp</artifactId>
-			<optional>true</optional>
-		</dependency>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-jdbc</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.bkjk.platform.summerframework</groupId>
+			<artifactId>platform-redis-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.bkjk.platform.summerframework</groupId>
+			<artifactId>platform-rabbit-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.bkjk.platform.summerframework</groupId>
+			<artifactId>platform-openfeign-core</artifactId>
+			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.bkjk.platform.summerframework</groupId>
+			<artifactId>platform-common-spring</artifactId>
 		</dependency>
 	</dependencies>
 </project>

@@ -8,9 +8,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.server.ServerHttpRequest;
 import org.springframework.http.server.ServerHttpResponse;
+import org.springframework.util.ReflectionUtils;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 
 import javax.servlet.http.HttpServletRequest;
+import java.lang.reflect.Field;
 import java.util.stream.Collectors;
 
 /**
@@ -33,9 +35,13 @@ public class DefaultApiResultTransformer implements ApiResultTransformer {
     public ApiResultWrapper<Object> exceptionToResult(HttpServletRequest request, Exception ex) {
         if (ex instanceof MethodArgumentNotValidException) {
             return handleMethodArgumentNotValidException(request, (MethodArgumentNotValidException) ex);
-        }
-        if (ex instanceof ApiException) {
+        }else if (ex instanceof ApiException) {
             return handleApiException(request, (ApiException) ex);
+        }
+        Object errorCode = getStringValueFromField(ex, ERROR_CODE_FIELD);
+        Object errorMessage = getStringValueFromField(ex, ERROR_MESSAGE_FIELD);
+        if (errorCode!=null) {
+            return handleExceptionWithCode(request,ex,errorCode,errorMessage);
         } else {
             return handleException(request, ex);
         }
@@ -44,6 +50,36 @@ public class DefaultApiResultTransformer implements ApiResultTransformer {
     @Override
     public Class<? extends ApiResultWrapper> getType() {
         return ApiResult.class;
+    }
+
+    private Object getStringValueFromField(Object o, String fieldName){
+        Field field = ReflectionUtils.findField(o.getClass(), fieldName);
+        if(field==null){
+            return null;
+        }
+        field.setAccessible(true);
+        try {
+            return field.get(o);
+        } catch (IllegalAccessException e) {
+            return null;
+        }
+    }
+
+    private final static String ERROR_CODE_FIELD="errorCode";
+    private final static String ERROR_MESSAGE_FIELD="errorMessage";
+    private final static String DATA_FIELD="data";
+
+    public ApiResult handleExceptionWithCode(HttpServletRequest request, Exception ex,Object errorCode,Object errorMessage) {
+        Object data = getStringValueFromField(ex, DATA_FIELD);
+        return ApiResult.builder()
+                .time(System.currentTimeMillis())
+                .success(false)
+                .code(errorCode.toString())
+                .data(data)
+                .error(ex.getClass().getName())
+                .message(errorMessage==null?ex.getMessage():errorMessage.toString())
+                .path(request.getRequestURI())
+                .build();
     }
 
     public ApiResult handleApiException(HttpServletRequest request, ApiException ex) {

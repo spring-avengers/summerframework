@@ -6,7 +6,6 @@ import org.apache.kafka.clients.KafkaClient;
 import org.springframework.amqp.rabbit.connection.AbstractConnectionFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
-import org.springframework.boot.autoconfigure.amqp.RabbitAutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.context.annotation.Bean;
@@ -19,8 +18,8 @@ import com.bkjk.platform.monitor.metric.micrometer.binder.kafka.KafkaConsumerMet
 
 import io.micrometer.core.instrument.MeterRegistry;
 
-@ConditionalOnClass(RabbitAutoConfiguration.class)
-@AutoConfigureAfter(value = {RabbitAutoConfiguration.class})
+@ConditionalOnClass(com.bkjk.platform.rabbit.RabbitAutoConfiguration.class)
+@AutoConfigureAfter(value = {com.bkjk.platform.rabbit.RabbitAutoConfiguration.class})
 public class JmsAutoConfiguration {
 
     @Configuration

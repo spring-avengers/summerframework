@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/dts_server?characterEncoding=utf-8&useSSL=false}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:abc@123}
+  thymeleaf:
+    mode: LEGACYHTML5
+    cache: false
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+com:
+  bkjk:
+    platform:
+      springfox:
+        enable: true
+        contextPath: /
+        contact: shiming.liu@bkjk.com
+        version: V1.0
+info:
+  groupId: com.bkjk.platform
+  artifactId: platform-dts-ops
+  version: 0.0.1-SNAPSHOT

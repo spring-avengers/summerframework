@@ -16,6 +16,8 @@
 	</modules>
 	<properties>
 		<common.version>2.0.0.RELEASE</common.version>
+		<redis.version>2.0.0.RELEASE</redis.version>
+		<rabbit.version>2.0.0.RELEASE</rabbit.version>
 		<openfeign.version>2.0.0.RELEASE</openfeign.version>
 	</properties>
 	<dependencyManagement>
@@ -31,6 +33,20 @@
 				<groupId>com.bkjk.platform.summerframework</groupId>
 				<artifactId>platform-common-dependencies</artifactId>
 				<version>${common.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.bkjk.platform.summerframework</groupId>
+				<artifactId>platform-redis-dependencies</artifactId>
+				<version>${redis.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+			<dependency>
+				<groupId>com.bkjk.platform.summerframework</groupId>
+				<artifactId>platform-rabbit-dependencies</artifactId>
+				<version>${rabbit.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
 			</dependency>
