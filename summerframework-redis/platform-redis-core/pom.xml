@@ -25,11 +25,15 @@
 			<groupId>com.sohu.tv</groupId>
 			<artifactId>cachecloud-open-jedis-stat</artifactId>
 			<version>${cachecloud.version}</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/com/sohu/tv/cachecloud-open-jedis-stat/1.2.2/cachecloud-open-jedis-stat-1.2.2.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>com.sohu.tv</groupId>
 			<artifactId>cachecloud-open-client-basic</artifactId>
 			<version>${cachecloud.version}</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/lib/com/sohu/tv/cachecloud-open-client-basic/1.2.2/cachecloud-open-client-basic-1.2.2.jar</systemPath>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
