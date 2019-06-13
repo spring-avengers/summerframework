@@ -1,1 +1,0 @@
-WARNING: Fontawesome 4.2 is blurry and a little buggy, therefore we did not update.
