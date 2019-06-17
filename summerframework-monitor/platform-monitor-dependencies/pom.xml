@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>platform-monitor-dependencies</artifactId>
 	<version>2.0.0.RELEASE</version>
@@ -12,7 +14,7 @@
 		<version>2.0.0.RELEASE</version>
 	</parent>
 	<properties>
-		<skywalking-opentracing.version>5.0.0-RC-SNAPSHOT</skywalking-opentracing.version>
+		<skywalking-opentracing.version>6.1.0</skywalking-opentracing.version>
 		<logbackjson.version>0.1.5</logbackjson.version>
 		<p6spy.version>3.8.0</p6spy.version>
 		<jsqlparser.version>1.2</jsqlparser.version>
