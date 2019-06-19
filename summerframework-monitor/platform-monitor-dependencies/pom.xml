@@ -18,7 +18,7 @@
 		<logbackjson.version>0.1.5</logbackjson.version>
 		<p6spy.version>3.8.0</p6spy.version>
 		<jsqlparser.version>1.2</jsqlparser.version>
-		<druid.version>1.1.1</druid.version>
+		<druid.version>1.1.17</druid.version>
 		<micrometer.version>1.1.0</micrometer.version>
 		<javassist.version>3.19.0-GA</javassist.version>
 	</properties>
