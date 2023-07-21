@@ -9,7 +9,7 @@
 	<packaging>jar</packaging>
 	<description>platform-es6-core</description>
 	<properties>
-		<elasticsearch.version>6.5.4</elasticsearch.version>
+		<elasticsearch.version>6.8.17</elasticsearch.version>
 	</properties>
 	<dependencies>
 		<!--引入elasticsearch 6 -->
