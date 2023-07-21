@@ -13,7 +13,7 @@
 		<version>2.0.0.RELEASE</version>
 	</parent>
 	<properties>
-		<xxljob.version>1.9.2</xxljob.version>
+		<xxljob.version>2.3.1</xxljob.version>
 	</properties>
 	<dependencyManagement>
 		<dependencies>
